@@ -35,11 +35,20 @@ def generate_feasible_slots(start_date, end_date, duration_hours):
 
     return slots
 
-# if __name__ == "__main__":
-#     print(validate_date_format("2025-07-10"))  # True
-#     print(validate_date_format("2025-13-10"))  # False
+import dateparser
 
-#     slots = generate_feasible_slots("2025-07-10", "2025-07-11", 2)
-#     for slot in slots:
-#         print(slot)
+def parse_relative_date(relative_date_str, reference_date=None):
+    """
+    Converts 'day after tomorrow' to 'YYYY-MM-DD' format based on reference_date.
+    """
+    if reference_date is None:
+        reference_date = datetime.today()
+    parsed_date = dateparser.parse(relative_date_str, settings={'RELATIVE_BASE': reference_date})
+    if parsed_date:
+        return parsed_date.strftime("%Y-%m-%d")
+    else:
+        return None
+    
+    
+
 
