@@ -1,18 +1,17 @@
+import json
+import re
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from datetime import datetime
-from utils.date_utils import parse_relative_date
 from dotenv import load_dotenv
-import json
-import re
 
 load_dotenv()
 
-llm = ChatGroq(model = 'compound-beta')
+llm = ChatGroq(model="compound-beta")
 
 prompt_template = PromptTemplate(
-    input_variables = ['current_date', 'user_input'],
-    template = """
+    input_variables=["current_date", "user_input"],
+    template="""
 You are an event planner assistant. Today's date is {current_date}.
 
 Extract from the user input:
@@ -22,40 +21,31 @@ Extract from the user input:
 - End date (same as start unless otherwise specified)
 - Location
 
-Return in JSON format.
+Return **only valid JSON** with double quotes, no explanation.
 
 User input: {user_input}
-
 """
 )
 
 def parse_event_prompt(user_input):
     today = datetime.today().strftime('%Y-%m-%d')
-    prompt = prompt_template.format(current_date = today, user_input = user_input)
+    prompt = prompt_template.format(current_date=today, user_input=user_input)
     response = llm.invoke(prompt)
 
-    output_str = str(response)
+    output_str = response.content if hasattr(response, 'content') else str(response)
+
+    # Extract only JSON block using regex
     json_match = re.search(r'\{.*\}', output_str, re.DOTALL)
     if json_match:
         json_str = json_match.group()
-        parsed = json.loads(json_str)
-        return parsed
+        try:
+            parsed = json.loads(json_str)
+            return parsed
+        except json.JSONDecodeError as e:
+            print("JSON parsing error:", e)
+            print("Received string:", json_str)
+            return {"error": "Invalid JSON format from NLU agent"}
     else:
-        return {"error": "No JSON found in LLM output."}
-
-
-# if __name__ == "__main__":
-#     user_prompt = "plan a casual lunch for 2 hours day after tomorrow around malad"
-#     result = parse_event_prompt(user_prompt)
-
-#     output_str = result  
-#     output_text = output_str.content
-
-#     json_match = re.search(r'\{.*\}', output_text, re.DOTALL)
-#     if json_match:
-#         json_str = json_match.group()
-#         parsed = json.loads(json_str)
-#         print("----- NLU Agent Output -----")
-#         print(parsed)
-#     else:
-#         print("No JSON found in output.")
+        print("No JSON found in output.")
+        print("Full output:", output_str)
+        return {"error": "No JSON found in NLU output"}
