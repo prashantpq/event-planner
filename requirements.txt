@@ -7,3 +7,4 @@ langchain-groq
 duckduckgo-search
 dateparser
 json
+requests

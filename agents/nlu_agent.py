@@ -33,7 +33,16 @@ def parse_event_prompt(user_input):
     today = datetime.today().strftime('%Y-%m-%d')
     prompt = prompt_template.format(current_date = today, user_input = user_input)
     response = llm.invoke(prompt)
-    return response
+
+    output_str = str(response)
+    json_match = re.search(r'\{.*\}', output_str, re.DOTALL)
+    if json_match:
+        json_str = json_match.group()
+        parsed = json.loads(json_str)
+        return parsed
+    else:
+        return {"error": "No JSON found in LLM output."}
+
 
 # if __name__ == "__main__":
 #     user_prompt = "plan a casual lunch for 2 hours day after tomorrow around malad"
