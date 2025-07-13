@@ -113,7 +113,6 @@ while True:
                 messages.append({"role": "assistant", "content": json.dumps(parsed)})
                 messages.append({"role": "user", "content": json.dumps(result)})
 
-                # Display venues if returned
                 if tool_name == "location_finder_tool":
                     venues = result.get("nearby_places")
                     if venues:
@@ -135,7 +134,7 @@ while True:
                 event_data.update(result)
 
             else:
-                print(f"⚠️ Unknown tool: {tool_name}")
+                print(f" Unknown tool: {tool_name}")
                 break
 
         else:
@@ -155,7 +154,7 @@ while True:
         break
 
     except Exception as e:
-        print("⚠️ Unexpected error:", e)
+        print(" Unexpected error:", e)
         break
 
 try:
@@ -184,6 +183,6 @@ try:
         print("\n ---------- FINAL STRUCTURED PLAN ----------")
         print(final_plan)
     else:
-        print("\n⚠️ Could not build final structured plan due to missing data.")
+        print("\nCould not build final structured plan due to missing data.")
 except Exception as e:
-    print("⚠️ Error building final structured plan:", e)
+    print(" Error building final structured plan:", e)
