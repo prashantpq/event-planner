@@ -60,7 +60,6 @@ Per Person: {budget['currency']}{budget['per_person_cost']}
     output += f"\n\nEnjoy your {event_name.lower()}!"
     return output
 
-# System prompt setup
 messages = [
     {
         "role": "system",
@@ -124,7 +123,6 @@ while True:
                     else:
                         print("\nNo venues found for the specified query and location.")
 
-                # Display slots if returned
                 if tool_name == "slot_generator_tool":
                     slots = result.get("feasible_slots")
                     if slots:
@@ -160,7 +158,6 @@ while True:
         print("⚠️ Unexpected error:", e)
         break
 
-# Final structured plan output
 try:
     if all(k in event_data for k in ["feasible_slots", "nearby_places"]):
         selected_slot = event_data.get("selected_slot") or event_data["feasible_slots"][0]
