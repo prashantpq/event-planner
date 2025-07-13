@@ -15,14 +15,6 @@ Plan your events professionally with AI assistance. This project leverages **Lan
 
 ---
 
-## 🖥️ **Demo**
-
-![Event Planner AI Demo](demo.gif)
-
-*(Add a recorded GIF or video of your app in action here for portfolio impact)*
-
----
-
 ## 🛠️ **Tech Stack**
 
 | Technology | Purpose |
@@ -34,7 +26,4 @@ Plan your events professionally with AI assistance. This project leverages **Lan
 | **FPDF** | Generating downloadable PDF plans |
 | **Folium** | Map visualizations for venue locations |
 
----
-
-## 🗂️ **Project Structure**
 
