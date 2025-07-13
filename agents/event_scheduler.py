@@ -7,8 +7,8 @@ def generate_feasible_slots(start_date, end_date, duration_hours):
     start = datetime.strptime(start_date, '%Y-%m-%d')
     end = datetime.strptime(end_date, '%Y-%m-%d')
 
-    work_start = 9
-    work_end = 18
+    work_start = 11
+    work_end = 22
 
     current_date = start
     while current_date <= end:

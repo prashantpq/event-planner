@@ -23,12 +23,14 @@ Extract from the user input:
 - End date (same as start unless otherwise specified)
 - Location
 - Number of people (if not mentioned, assume 2)
+- Query type (bar, cafe, restaurant, pub, club, McDonald's, Starbucks etc. Infer from user input. Default to "restaurant" if not clear.)
 
 Return only valid JSON without any explanation or text before or after it.
 
 User input: {user_input}
 """
 )
+
 
 
 def parse_event_prompt(user_input):

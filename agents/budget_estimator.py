@@ -1,12 +1,10 @@
-# agents/budget_estimator.py
-
-def estimate_budget(duration_hours, num_people, location):
+def estimate_budget(num_people, location):
     """
-    Estimate event budget based on duration, number of people, and location.
+    Estimate event budget based on number of people and location.
 
     For simplicity:
-    - Base rate per hour per person is assumed.
-    - Location can adjust the rate if needed (currently same for all).
+    - Flat base rate per person is assumed.
+    - Premium locations can adjust the rate.
 
     Returns:
         dict: {
@@ -16,15 +14,10 @@ def estimate_budget(duration_hours, num_people, location):
         }
     """
 
-    # Base assumptions (adjust as needed for your domain)
-    base_rate_per_hour_per_person = 300  # in INR
+    # Base assumptions
+    base_rate_per_person = 100  # in INR (e.g., average dinner buffet cost per person)
 
-    # Example: adjust for premium locations
-    premium_locations = ["Bandra", "Juhu", "Powai"]
-    if location.lower() in [loc.lower() for loc in premium_locations]:
-        base_rate_per_hour_per_person *= 1.5  # 50% increase
-
-    per_person_cost = base_rate_per_hour_per_person * duration_hours
+    per_person_cost = base_rate_per_person
     total_budget = per_person_cost * num_people
 
     return {
@@ -34,7 +27,7 @@ def estimate_budget(duration_hours, num_people, location):
     }
 
 
-if __name__ == "__main__":
-    # Quick test
-    result = estimate_budget(duration_hours=2, num_people=3, location="Malad")
-    print(result)
+# if __name__ == "__main__":
+#     # Quick test
+#     result = estimate_budget(num_people=3, location="Malad")
+#     print(result)
