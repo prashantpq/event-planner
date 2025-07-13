@@ -27,9 +27,6 @@ TOOLS = {
 }
 
 def extract_json(text):
-    """
-    Extract JSON content from text using regex.
-    """
     json_pattern = re.compile(r"\{(?:[^{}]|(?R))*\}", re.DOTALL)
     match = json_pattern.search(text)
     if match:
@@ -39,23 +36,29 @@ def extract_json(text):
             return None
     return None
 
-def build_final_output(event_name, slot, place, number_of_people, budget_estimate):
+def build_final_output(event_name, slot, budget_estimates, number_of_people):
     """
-    Build the final structured event plan output.
+    Build final structured plan with budgets per venue.
     """
-    return f"""
+    output = f"""
 Here's your recommended event plan!
 
 Event: {event_name.title()}
 Date: {slot['date']}
 Time: {slot['start_time']} to {slot['end_time']}
-Location: {place['name']}
 Guests: {number_of_people}
-Total Budget: {budget_estimate['currency']}{budget_estimate['total_budget']}
-Per Person: {budget_estimate['currency']}{budget_estimate['per_person_cost']}
+    """.strip()
 
-Enjoy your {event_name.lower()}!
-""".strip()
+    for budget in budget_estimates:
+        output += f"""
+
+Venue: {budget['place_name']}
+Total Budget: {budget['currency']}{budget['total_budget']}
+Per Person: {budget['currency']}{budget['per_person_cost']}
+        """
+
+    output += f"\n\nEnjoy your {event_name.lower()}!"
+    return output
 
 # System prompt setup
 messages = [
@@ -159,21 +162,27 @@ while True:
 
 # Final structured plan output
 try:
-    if all(k in event_data for k in ["feasible_slots", "nearby_places", "budget_estimate"]):
+    if all(k in event_data for k in ["feasible_slots", "nearby_places"]):
         selected_slot = event_data.get("selected_slot") or event_data["feasible_slots"][0]
         venues = event_data.get("nearby_places", [])
-        selected_place = venues[0] if venues else {"name": "No venue found", "latitude": "", "longitude": ""}
-
-        number_of_people = event_data.get("number_of_people", "N/A")
-        budget_estimate = event_data["budget_estimate"]
+        number_of_people = event_data.get("number_of_people", 2)
         event_name = event_data.get("event_name", "Event")
+
+        budget_estimates = []
+        for place in venues:
+            budget_result = budget_estimator_tool.invoke({
+                "number_of_people": number_of_people,
+                "location": place['name']
+            })
+            budget_estimate = budget_result.get("budget_estimate", {})
+            budget_estimate["place_name"] = place["name"]
+            budget_estimates.append(budget_estimate)
 
         final_plan = build_final_output(
             event_name=event_name,
             slot=selected_slot,
-            place=selected_place,
-            number_of_people=number_of_people,
-            budget_estimate=budget_estimate
+            budget_estimates=budget_estimates,
+            number_of_people=number_of_people
         )
         print("\n ---------- FINAL STRUCTURED PLAN ----------")
         print(final_plan)

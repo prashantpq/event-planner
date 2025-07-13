@@ -9,71 +9,61 @@ from agents.budget_estimator import estimate_budget
 @tool
 def nlu_tool(user_input: str) -> dict:
     """
-    Parses the user's natural language input to extract event details.
+    Perform natural language understanding on user input to extract event details.
 
     Args:
-        user_input (str): The user's event planning query.
+        user_input (str): The user's input describing the event.
 
     Returns:
-        dict: Extracted event details including event name, duration_hours,
-              start_date, end_date, location, brand_name, query_type, and number_of_people.
+        dict: Parsed event details including event name, duration, location, etc.
     """
     return parse_event_prompt(user_input)
-
 
 @tool
 def location_finder_tool(location: str, query_type: str = "restaurant", brand_name: str = None) -> dict:
     """
-    Finds nearby places based on provided location, query type, and brand name.
+    Find nearby places based on location, query type, and optional brand.
 
     Args:
-        location (str): The region or locality to search within.
-        query_type (str, optional): The type of place (e.g., restaurant, cafe). Defaults to "restaurant".
-        brand_name (str, optional): Specific brand name to prioritize (e.g., McDonald's). Defaults to None.
+        location (str): The region or place to search around.
+        query_type (str): Type of place to search for (e.g. cafe, restaurant).
+        brand_name (str, optional): Specific brand to search for.
 
     Returns:
-        dict: Contains 'nearby_places', a list of matching place dictionaries with name, latitude, longitude, type, and category.
+        dict: Dictionary containing a list of nearby places with their details.
     """
     places = find_places(brand_name, query_type, location)
     return {"nearby_places": places}
 
-
 @tool
 def slot_generator_tool(start_date: str, end_date: str = None, duration_hours: int = 1) -> dict:
     """
-    Generates feasible time slots for an event between start_date and end_date.
+    Generate feasible time slots for the event.
 
     Args:
-        start_date (str): Start date in YYYY-MM-DD format.
-        end_date (str, optional): End date in YYYY-MM-DD format. Defaults to start_date if None.
-        duration_hours (int, optional): Duration of the event in hours. Defaults to 1.
+        start_date (str): Start date for slot generation.
+        end_date (str, optional): End date for slot generation. Defaults to start_date.
+        duration_hours (int, optional): Duration of each slot in hours. Defaults to 1.
 
     Returns:
-        dict: Contains 'feasible_slots', a list of generated slot dictionaries with date, start_time, and end_time.
+        dict: Dictionary containing a list of feasible slots with timings.
     """
     if end_date is None:
         end_date = start_date
     slots = generate_feasible_slots(start_date, end_date, duration_hours)
     return {"feasible_slots": slots}
 
-
 @tool
 def slot_selection_tool(event_name: str, feasible_slots: list) -> dict:
     """
-    Selects the most suitable time slot based on the event type and context.
-
-    Rules:
-        - For 'date' events: prefer evening slots (17:00 onwards).
-        - For 'lunch' events: prefer 12:00-15:00 slots.
-        - For 'dinner' events: prefer slots after 19:00.
-        - Defaults to the first available slot if no preference matches.
+    Select the most suitable slot based on event type.
 
     Args:
-        event_name (str): The name of the event to infer preferred time.
-        feasible_slots (list): List of feasible slots generated earlier.
+        event_name (str): The name of the event (e.g. lunch, dinner).
+        feasible_slots (list): List of feasible slots.
 
     Returns:
-        dict: Contains 'selected_slot', the best matching slot dictionary.
+        dict: Dictionary containing the selected slot.
     """
     selected = feasible_slots[0]
     if feasible_slots:
@@ -92,18 +82,17 @@ def slot_selection_tool(event_name: str, feasible_slots: list) -> dict:
 
     return {"selected_slot": selected}
 
-
 @tool
 def budget_estimator_tool(number_of_people: int = 1, location: str = "unknown") -> dict:
     """
-    Estimates the budget for an event based on number of people and location.
+    Estimate budget for the event based on location and number of people.
 
     Args:
-        number_of_people (int, optional): Number of guests attending. Defaults to 1.
-        location (str, optional): Location of the event for cost reference. Defaults to "unknown".
+        number_of_people (int, optional): Number of attendees. Defaults to 1.
+        location (str, optional): Location or venue for budget estimation. Defaults to "unknown".
 
     Returns:
-        dict: Contains 'budget_estimate' with total budget and per person cost.
+        dict: Dictionary containing total and per person budget estimates with currency.
     """
     budget = estimate_budget(number_of_people, location)
     return {"budget_estimate": budget}

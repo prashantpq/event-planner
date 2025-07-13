@@ -10,3 +10,4 @@ json
 requests
 regex
 geopy
+streamlit

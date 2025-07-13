@@ -36,7 +36,7 @@ def geocode_region(region, api_key):
         logger.error(f"Geocoding error: {e}")
         return None, None
 
-def nearby_search(lat, lon, api_key, query, radius=20000):
+def nearby_search(lat, lon, api_key, query, radius=5000):
     url = "https://us1.locationiq.com/v1/nearby.php"
     params = {
         "key": api_key,
@@ -71,7 +71,7 @@ def nearby_search(lat, lon, api_key, query, radius=20000):
         logger.error(f"Nearby search error: {e}")
         return []
 
-def direct_text_search(lat, lon, api_key, query, region, radius=10000):
+def direct_text_search(lat, lon, api_key, query, region, radius=5000):
     url = "https://us1.locationiq.com/v1/search.php"
     params = {
         "key": api_key,
