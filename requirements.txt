@@ -9,3 +9,4 @@ dateparser
 json
 requests
 regex
+geopy
