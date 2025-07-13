@@ -1,4 +1,4 @@
-# 🎉 Event Planner AI
+# Event Planner
 
 Plan your events professionally with AI assistance. This project leverages **LangChain tools**, **LLMs (Groq LLaMA-3)**, and **Streamlit** to build an interactive Event Planning Agent capable of understanding user requests, suggesting venues, estimating budgets, and scheduling slots efficiently.
 
