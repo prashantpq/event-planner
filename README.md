@@ -4,18 +4,18 @@ Plan your events professionally with AI assistance. This project leverages **Lan
 
 ---
 
-## 🚀 **Features**
+##  **Features**
 
-✅ Natural Language Understanding for event request extraction  
-✅ Venue search with live **Folium maps integration**  
-✅ Smart slot generation and selection  
-✅ Budget estimation per venue and per guest  
-✅ Final plan summary with **PDF download support**  
-✅ Conversational follow-up via **ChatGroq LLaMA-3** for personalized queries
+- Natural Language Understanding for event request extraction  
+- Venue search with live **Folium maps integration**  
+- Smart slot generation and selection  
+- Budget estimation per venue and per guest  
+- Final plan summary with **PDF download support**  
+- Conversational follow-up via **ChatGroq LLaMA-3** for personalized queries
 
 ---
 
-## 🛠️ **Tech Stack**
+##  **Tech Stack**
 
 | Technology | Purpose |
 |------------|---------|
